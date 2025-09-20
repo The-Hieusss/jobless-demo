@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { X, Heart } from "lucide-react";
 import { AnimatePresence, motion } from "framer-motion";
 import type { PanInfo } from "framer-motion";
-import  supabase  from "../utils/supabase";
+import supabase from "../utils/supabase";
 
 const SWIPE_THRESHOLD = 100;
 
@@ -33,7 +33,9 @@ export default function SwipeDeck() {
 
   useEffect(() => {
     async function fetchProfiles() {
-      const { data: { user } } = await supabase.auth.getUser();
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
       if (!user) return;
       setCurrentUserId(user.id);
 
@@ -91,12 +93,18 @@ export default function SwipeDeck() {
           .single();
 
         if (userProfile && targetProfile) {
-          if (userProfile.role === "student" && targetProfile.role === "recruiter") {
+          if (
+            userProfile.role === "student" &&
+            targetProfile.role === "recruiter"
+          ) {
             await supabase.from("matches").insert({
               student_id: currentUserId,
               recruiter_id: profile.id,
             });
-          } else if (userProfile.role === "recruiter" && targetProfile.role === "student") {
+          } else if (
+            userProfile.role === "recruiter" &&
+            targetProfile.role === "student"
+          ) {
             await supabase.from("matches").insert({
               student_id: profile.id,
               recruiter_id: currentUserId,
@@ -117,7 +125,7 @@ export default function SwipeDeck() {
 
   if (index >= profiles.length) {
     return (
-      <div className="min-h-screen flex flex-col items-center justify-center bg-gray-100 text-gray-800 p-6 text-center">
+      <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-b from-[#93C5FD] to-white text-gray-800 p-6 text-center">
         <h2 className="text-3xl font-bold mb-4">No more profiles</h2>
         <p className="mb-2">Check back later for new people 🎉</p>
       </div>
@@ -127,13 +135,25 @@ export default function SwipeDeck() {
   const current = profiles[index];
 
   return (
-    <div className="relative flex flex-col items-center justify-center min-h-screen bg-gray-50 p-4">
+    <div className="relative flex flex-col items-center justify-between min-h-screen w-full bg-gradient-to-b from-[#93C5FD] via-white to-[#E0F2FE] px-4">
+      {/* Top bar */}
+      <div className="flex w-full px-6 py-4">
+        <span className="text-4xl font-extrabold text-[#2563EB]">J.</span>
+      </div>
+  
+      {/* Swipe Card */}
       <AnimatePresence initial={false} mode="wait">
         <motion.div
           key={current.id}
-          className="w-80 h-96 sm:w-96 sm:h-[28rem] rounded-3xl shadow-xl bg-center bg-cover relative cursor-pointer"
+          className="
+            w-11/12 sm:w-[28rem] lg:w-[32rem] 
+            aspect-[3/4]
+            rounded-3xl shadow-lg bg-center bg-cover relative cursor-pointer
+          "
           style={{
-            backgroundImage: `url(${current.profile_pic_url || "https://placehold.co/300x400"})`,
+            backgroundImage: `url(${
+              current.profile_pic_url || "https://placehold.co/400x500"
+            })`,
           }}
           variants={variants}
           initial="enter"
@@ -145,20 +165,32 @@ export default function SwipeDeck() {
           onDragEnd={handleDragEnd}
           onClick={() => setExpanded((prev) => !prev)}
         >
-          <div className="absolute bottom-0 w-full bg-gradient-to-t from-black/60 to-transparent p-4 rounded-b-3xl flex justify-between items-center">
-            <div>
-              <h2 className="text-yellow-400 text-2xl font-bold">{current.name}</h2>
-              <p className="text-white/80 text-sm mt-1">{current.role}</p>
+          {/* Overlay Info */}
+          <div className="absolute bottom-0 w-full bg-gradient-to-t from-black/70 to-transparent p-6 rounded-b-3xl">
+            <h2 className="text-white text-2xl sm:text-3xl font-bold drop-shadow-md">
+              {current.name}
+            </h2>
+            <p className="text-white/90 text-sm sm:text-base mt-1">
+              {current.role}
+            </p>
+  
+            {/* Tags */}
+            <div className="mt-3 flex flex-wrap gap-2">
+              <span className="rounded-full bg-white/20 px-3 py-1 text-xs sm:text-sm text-white">
+                introvert
+              </span>
+              <span className="rounded-full bg-white/20 px-3 py-1 text-xs sm:text-sm text-white">
+                innovative
+              </span>
+              <span className="rounded-full bg-white/20 px-3 py-1 text-xs sm:text-sm text-white">
+                risk-taker
+              </span>
             </div>
-            {expanded ? (
-              <X className="text-white" />
-            ) : (
-              <div className="text-white text-sm whitespace-nowrap">See Profile</div>
-            )}
           </div>
         </motion.div>
       </AnimatePresence>
-
+  
+      {/* Expanded Bio */}
       <AnimatePresence>
         {expanded && (
           <motion.div
@@ -167,30 +199,31 @@ export default function SwipeDeck() {
             animate={{ height: "auto", opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
             transition={{ duration: 0.3 }}
-            className="w-80 sm:w-96 mt-4 bg-white text-gray-800 rounded-xl shadow-md p-4 overflow-hidden"
+            className="w-11/12 sm:w-[28rem] lg:w-[32rem] mt-4 bg-white text-gray-800 rounded-xl shadow-md p-4 text-sm sm:text-base"
           >
-            <p className="text-sm mb-1">
+            <p>
               <strong>About:</strong> {current.bio || "No bio yet"}
             </p>
           </motion.div>
         )}
       </AnimatePresence>
-
-      {/* Swipe Buttons */}
-      <div className="mt-8 flex gap-10">
-        <button
+  
+      {/* Swipe Icons (no background buttons) */}
+      <div className="w-full flex items-center justify-between px-16 sm:px-32 py-6">
+        {/* Dislike Icon */}
+        <X
           onClick={() => handleChoice("dislike")}
-          className="p-4 rounded-full bg-red-100 hover:bg-red-200 transition"
-        >
-          <X className="text-red-600" size={32} />
-        </button>
-        <button
+          className="cursor-pointer w-48 h-48 text-[white] hover:scale-110 transition-transform"
+          size={64}
+        />
+  
+        {/* Like Icon */}
+        <Heart
           onClick={() => handleChoice("like")}
-          className="p-4 rounded-full bg-green-100 hover:bg-green-200 transition"
-        >
-          <Heart className="text-green-600" size={32} />
-        </button>
+          className="cursor-pointer w-48 h-48 text-[white] hover:scale-110 transition-transform"
+          size={64}
+        />
       </div>
     </div>
   );
-}
+}  
