@@ -4,7 +4,6 @@
     "": {
       "name": "jobless-demo",
       "dependencies": {
-        "@react-spring/web": "9.5.5",
         "@supabase/supabase-js": "^2.57.4",
         "@types/react-router-dom": "^5.3.3",
         "framer-motion": "^12.23.16",
@@ -129,18 +128,6 @@
     "@nodelib/fs.stat": ["@nodelib/fs.stat@2.0.5", "", {}, "sha512-RkhPPp2zrqDAQA/2jNhnztcPAlv64XdhIp7a7454A5ovI7Bukxgt7MX7udwAu3zg1DcpPU0rz3VV1SeaqvY4+A=="],
 
     "@nodelib/fs.walk": ["@nodelib/fs.walk@1.2.8", "", { "dependencies": { "@nodelib/fs.scandir": "2.1.5", "fastq": "^1.6.0" } }, "sha512-oGB+UxlgWcgQkgwo8GcEGwemoTFt3FIO9ababBmaGwXIoBKZ+GTy0pP185beGg7Llih/NSHSV2XAs1lnznocSg=="],
-
-    "@react-spring/animated": ["@react-spring/animated@9.5.5", "", { "dependencies": { "@react-spring/shared": "~9.5.5", "@react-spring/types": "~9.5.5" }, "peerDependencies": { "react": "^16.8.0 || ^17.0.0 || ^18.0.0" } }, "sha512-glzViz7syQ3CE6BQOwAyr75cgh0qsihm5lkaf24I0DfU63cMm/3+br299UEYkuaHNmfDfM414uktiPlZCNJbQA=="],
-
-    "@react-spring/core": ["@react-spring/core@9.5.5", "", { "dependencies": { "@react-spring/animated": "~9.5.5", "@react-spring/rafz": "~9.5.5", "@react-spring/shared": "~9.5.5", "@react-spring/types": "~9.5.5" }, "peerDependencies": { "react": "^16.8.0 || ^17.0.0 || ^18.0.0" } }, "sha512-shaJYb3iX18Au6gkk8ahaF0qx0LpS0Yd+ajb4asBaAQf6WPGuEdJsbsNSgei1/O13JyEATsJl20lkjeslJPMYA=="],
-
-    "@react-spring/rafz": ["@react-spring/rafz@9.5.5", "", {}, "sha512-F/CLwB0d10jL6My5vgzRQxCNY2RNyDJZedRBK7FsngdCmzoq3V4OqqNc/9voJb9qRC2wd55oGXUeXv2eIaFmsw=="],
-
-    "@react-spring/shared": ["@react-spring/shared@9.5.5", "", { "dependencies": { "@react-spring/rafz": "~9.5.5", "@react-spring/types": "~9.5.5" }, "peerDependencies": { "react": "^16.8.0 || ^17.0.0 || ^18.0.0" } }, "sha512-YwW70Pa/YXPOwTutExHZmMQSHcNC90kJOnNR4G4mCDNV99hE98jWkIPDOsgqbYx3amIglcFPiYKMaQuGdr8dyQ=="],
-
-    "@react-spring/types": ["@react-spring/types@9.5.5", "", {}, "sha512-7I/qY8H7Enwasxr4jU6WmtNK+RZ4Z/XvSlDvjXFVe7ii1x0MoSlkw6pD7xuac8qrHQRm9BTcbZNyeeKApYsvCg=="],
-
-    "@react-spring/web": ["@react-spring/web@9.5.5", "", { "dependencies": { "@react-spring/animated": "~9.5.5", "@react-spring/core": "~9.5.5", "@react-spring/shared": "~9.5.5", "@react-spring/types": "~9.5.5" }, "peerDependencies": { "react": "^16.8.0 || ^17.0.0 || ^18.0.0", "react-dom": "^16.8.0 || ^17.0.0 || ^18.0.0" } }, "sha512-+moT8aDX/ho/XAhU+HRY9m0LVV9y9CK6NjSRaI+30Re150pB3iEip6QfnF4qnhSCQ5drpMF0XRXHgOTY/xbtFw=="],
 
     "@rolldown/pluginutils": ["@rolldown/pluginutils@1.0.0-beta.35", "", {}, "sha512-slYrCpoxJUqzFDDNlvrOYRazQUNRvWPjXA17dAOISY3rDMxX6k8K4cj2H+hEYMHF81HO3uNd5rHVigAWRM5dSg=="],
 
