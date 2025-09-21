@@ -22,6 +22,7 @@ import PostSignupScreen from "./pages/PostSignupScreen";
 import StudentFormWizard from "./pages/StudentForm";
 import MatchBanner from "./pages/MatchBanner";
 import ChatStation from "./pages/ChatStation";
+import ScrollToTop from "./components/ScrollToTop";
 
 function App() {
   const [loading, setLoading] = useState(true); // splashscreen
@@ -68,6 +69,7 @@ function App() {
 
   return (
     <Router>
+      <ScrollToTop />
       <div className="min-h-screen w-full bg-gradient-to-b from-jobless-white to-jobless-blue/40">
         <Routes>
           {/* Auth routes */}

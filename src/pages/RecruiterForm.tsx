@@ -210,43 +210,43 @@ export default function RecruiterFormWizard() {
             name="company_name"
             placeholder="Company Name"
             onChange={updateField}
-            className="w-full rounded-full p-3 bg-white font-body"
+            className="w-full rounded-full p-3 bg-white font-body placeholder:text-jobless-blue/80"
           />
           <input
             name="company_industry"
             placeholder="Company Industry"
             onChange={updateField}
-            className="w-full rounded-full p-3 bg-white font-body"
+            className="w-full rounded-full p-3 bg-white font-body placeholder:text-jobless-blue"
           />
           <input
             name="user_role"
             placeholder="Your Role"
             onChange={updateField}
-            className="w-full rounded-full p-3 bg-white font-body"
+            className="w-full rounded-full p-3 bg-white font-body placeholder:text-jobless-blue"
           />
           <input
             name="looking_for"
             placeholder="Looking For (comma separated)"
             onChange={updateField}
-            className="w-full rounded-full p-3 bg-white font-body"
+            className="w-full rounded-full p-3 bg-white font-body placeholder:text-jobless-blue"
           />
           <input
             name="preferred_majors"
             placeholder="Preferred Majors (comma separated)"
             onChange={updateField}
-            className="w-full rounded-full p-3 bg-white font-body"
+            className="w-full rounded-full p-3 bg-white font-body placeholder:text-jobless-blue"
           />
           <input
             name="work_type"
             placeholder="Work Type (remote, hybrid, in-person)"
             onChange={updateField}
-            className="w-full rounded-full p-3 bg-white font-body"
+            className="w-full rounded-full p-3 bg-white font-body placeholder:text-jobless-blue"
           />
           <textarea
             name="bio"
             placeholder="Short Bio"
             onChange={updateField}
-            className="w-full rounded-2xl p-3 bg-white font-body"
+            className="w-full rounded-2xl p-3 bg-white font-body placeholder:text-jobless-blue h-24 resize-none"
           />
 
           {/* Upload Profile Pic */}
