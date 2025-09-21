@@ -1,16 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import supabase from "../utils/supabase";
-import {
-  File,
-  School,
-  Briefcase,
-  Calendar,
-  Building2,
-  Pencil,
-  Save,
-  X,
-} from "lucide-react";
+import { File, School, Briefcase, Calendar, Building2, Pencil, Save, X } from "lucide-react";
 
 export default function ProfilePage() {
   const { id } = useParams<{ id: string }>();
@@ -20,8 +11,46 @@ export default function ProfilePage() {
   const [details, setDetails] = useState<any>(null);
   const [habits, setHabits] = useState<any>(null);
 
+  // pic upload state
+  const [uploadingPic, setUploadingPic] = useState(false);
+
   const [editing, setEditing] = useState(false);
   const [formData, setFormData] = useState<any>({});
+
+  // handle profile picture selection & upload
+  async function handleProfilePicChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    if (!file || !profile) return;
+    setUploadingPic(true);
+    try {
+      const mimeToExt: Record<string, string> = {
+        "image/jpeg": "jpg",
+        "image/jpg": "jpg",
+        "image/png": "png",
+        "image/webp": "webp",
+      };
+      const ext = mimeToExt[file.type] || (file.name.includes(".") ? file.name.split(".").pop() || "png" : "png");
+      const filename = `${profile.id}/profile.${ext}`;
+
+      const { error: uploadError } = await supabase.storage
+        .from("profile-pics")
+        .upload(filename, file, { upsert: true, contentType: file.type });
+
+      if (uploadError) {
+        console.error("Profile pic upload failed:", uploadError);
+        return;
+      }
+
+      const { data: urlData } = supabase.storage.from("profile-pics").getPublicUrl(filename);
+      const publicUrl = urlData.publicUrl;
+
+      // update local form + profile preview immediately
+      setFormData((prev: any) => ({ ...prev, profile_pic_url: publicUrl }));
+      setProfile((prev: any) => ({ ...prev, profile_pic_url: publicUrl }));
+    } finally {
+      setUploadingPic(false);
+    }
+  }
 
   useEffect(() => {
     async function fetchProfile() {
@@ -122,7 +151,11 @@ export default function ProfilePage() {
     // Update main profile
     await supabase
       .from("profiles")
-      .update({ name: formData.name, bio: formData.bio })
+      .update({
+        name: formData.name,
+        bio: formData.bio,
+        profile_pic_url: formData.profile_pic_url ?? profile.profile_pic_url,
+      })
       .eq("id", profile.id);
 
     if (profile.role === "student") {
@@ -186,12 +219,46 @@ export default function ProfilePage() {
       <div className="bg-white rounded-2xl shadow-lg w-full max-w-3xl p-6 sm:p-8 space-y-8">
         {/* Header */}
         <div className="flex flex-col items-center text-center space-y-4">
-          {profile.profile_pic_url && (
-            <img
-              src={profile.profile_pic_url}
-              alt={profile.name}
-              className="w-28 h-28 sm:w-32 sm:h-32 rounded-full border-4 border-jobless-blue shadow-md object-cover"
-            />
+          {/* Profile picture — editable when owner is editing */}
+          {editing ? (
+            <label className="relative w-28 h-28 sm:w-32 sm:h-32 rounded-full overflow-hidden border-4 border-jobless-blue shadow-md cursor-pointer bg-white flex items-center justify-center">
+              <input
+                type="file"
+                accept="image/*"
+                className="hidden"
+                onChange={handleProfilePicChange}
+                aria-label="Upload profile picture"
+              />
+              {formData.profile_pic_url || profile.profile_pic_url ? (
+                <img
+                  src={formData.profile_pic_url || profile.profile_pic_url}
+                  alt={profile.name}
+                  className="w-full h-full object-cover"
+                />
+              ) : (
+                <div className="flex flex-col items-center justify-center text-jobless-blue/70">
+                  <File className="w-6 h-6" />
+                  <span className="text-xs mt-1">Add photo</span>
+                </div>
+              )}
+              {uploadingPic && (
+                <div className="absolute inset-0 bg-white/60 flex items-center justify-center">
+                  <span className="text-sm">Uploading…</span>
+                </div>
+              )}
+            </label>
+          ) : (
+            profile.profile_pic_url ? (
+              <img
+                src={profile.profile_pic_url}
+                alt={profile.name}
+                className="w-28 h-28 sm:w-32 sm:h-32 rounded-full border-4 border-jobless-blue shadow-md object-cover"
+              />
+            ) : (
+              <div className="w-28 h-28 sm:w-32 sm:h-32 rounded-full border-4 border-jobless-blue shadow-md flex items-center justify-center text-jobless-blue/70">
+                <File className="w-6 h-6" />
+              </div>
+            )
           )}
 
           {editing ? (
