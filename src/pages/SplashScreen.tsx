@@ -6,7 +6,7 @@ export default function SplashScreen() {
           Jobless<span className="text-jobless-blue">.</span>
         </h1>
         <p className="mt-4 font-body text-jobless-blue text-base sm:text-lg md:text-xl">
-          Swipe Right on Your Next Job
+          Your Next Job Starts With A Swipe!
         </p>
       </div>
     </div>
