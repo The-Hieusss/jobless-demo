@@ -3,26 +3,24 @@ import { X, Heart } from "lucide-react";
 import { AnimatePresence, motion } from "framer-motion";
 import type { PanInfo } from "framer-motion";
 import supabase from "../utils/supabase";
+import { useNavigate } from "react-router-dom";
 
 const SWIPE_THRESHOLD = 100;
-
-const variants = {
-  enter: { scale: 0.9, opacity: 0, y: 50 },
-  center: {
-    scale: 1,
-    opacity: 1,
-    y: 0,
-    transition: { type: "spring" as const, stiffness: 300, damping: 30 },
-  },
-  exit: { scale: 0.8, opacity: 0, y: -50, transition: { duration: 0.3 } },
-};
 
 interface Profile {
   id: string;
   name: string;
   bio: string | null;
   profile_pic_url: string | null;
-  role: "student" | "recruiter";
+  role: string;
+  school?: string | null;
+  major?: string | null;
+  graduation_year?: number | null;
+  company_name?: string | null;
+  company_industry?: string | null;
+  user_role?: string | null;
+  studentHabits?: string[];
+  recruiterHabits?: string[];
 }
 
 export default function SwipeDeck() {
@@ -30,6 +28,7 @@ export default function SwipeDeck() {
   const [index, setIndex] = useState(0);
   const [expanded, setExpanded] = useState(false);
   const [currentUserId, setCurrentUserId] = useState<string | null>(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     async function fetchProfiles() {
@@ -39,95 +38,148 @@ export default function SwipeDeck() {
       if (!user) return;
       setCurrentUserId(user.id);
 
+      // get current user's role
+      const { data: myProfile } = await supabase
+        .from("profiles")
+        .select("role")
+        .eq("id", user.id)
+        .single();
+
+      if (!myProfile) return;
+
+      const oppositeRole =
+        myProfile.role === "student" ? "recruiter" : "student";
+
+      // fetch only opposite role
       const { data, error } = await supabase
         .from("profiles")
-        .select("id,name,bio,profile_pic_url,role")
+        .select(
+          `
+        id, name, bio, profile_pic_url, role,
+        student_details (school, major, graduation_year),
+        student_habits (personality, three_words, team_role, startup_style, chaos_response),
+        recruiter_details (company_name, company_industry, user_role),
+        recruiter_habits (values_most, work_style, interview_theme, leader_traits)
+      `
+        )
+        .eq("role", oppositeRole)
         .neq("id", user.id)
         .limit(20);
 
-      if (!error) setProfiles(data || []);
+      if (!error && data) {
+        const mapped = data.map((p: any) => ({
+          id: p.id,
+          name: p.name,
+          bio: p.bio,
+          role: p.role,
+          profile_pic_url: p.profile_pic_url,
+          school: p.student_details?.school,
+          major: p.student_details?.major,
+          graduation_year: p.student_details?.graduation_year,
+          company_name: p.recruiter_details?.company_name,
+          company_industry: p.recruiter_details?.company_industry,
+          user_role: p.recruiter_details?.user_role,
+          studentHabits: [
+            ...(p.student_habits?.personality || []),
+            ...(p.student_habits?.three_words || []),
+            ...(p.student_habits?.team_role || []),
+            ...(p.student_habits?.startup_style || []),
+            ...(p.student_habits?.chaos_response || []),
+          ],
+          recruiterHabits: [
+            ...(p.recruiter_habits?.values_most || []),
+            ...(p.recruiter_habits?.work_style || []),
+            ...(p.recruiter_habits?.interview_theme || []),
+            ...(p.recruiter_habits?.leader_traits || []),
+          ],
+        }));
+        setProfiles(mapped);
+      }
     }
     fetchProfiles();
   }, []);
 
   const handleDragEnd = (_: any, info: PanInfo) => {
-    if (info.offset.x > SWIPE_THRESHOLD) {
-      handleChoice("like");
-    } else if (info.offset.x < -SWIPE_THRESHOLD) {
-      handleChoice("dislike");
-    }
+    if (info.offset.x > SWIPE_THRESHOLD) handleChoice("like");
+    else if (info.offset.x < -SWIPE_THRESHOLD) handleChoice("dislike");
   };
 
   async function handleChoice(choice: "like" | "dislike") {
     const profile = profiles[index];
     if (!profile || !currentUserId) return;
 
-    // Record swipe in DB
-    await supabase.from("swipes").insert({
+    const payload = {
       swiper_id: currentUserId,
       target_id: profile.id,
       direction: choice,
-    });
+    };
 
-    // Check for mutual right swipe (match)
+    const { error } = await supabase.from("swipes").insert(payload).select();
+    if (error) {
+      console.error("❌ swipe insert failed:", error.message);
+      return;
+    }
+
+    // if LIKE, check for mutual like
     if (choice === "like") {
       const { data: mutual } = await supabase
         .from("swipes")
-        .select("*")
+        .select("id")
         .eq("swiper_id", profile.id)
         .eq("target_id", currentUserId)
         .eq("direction", "like")
         .maybeSingle();
 
       if (mutual) {
-        const { data: userProfile } = await supabase
+        // roles
+        const { data: currentRole } = await supabase
           .from("profiles")
           .select("role")
           .eq("id", currentUserId)
           .single();
 
-        const { data: targetProfile } = await supabase
+        const { data: targetRole } = await supabase
           .from("profiles")
           .select("role")
           .eq("id", profile.id)
           .single();
 
-        if (userProfile && targetProfile) {
-          if (
-            userProfile.role === "student" &&
-            targetProfile.role === "recruiter"
-          ) {
-            await supabase.from("matches").insert({
-              student_id: currentUserId,
-              recruiter_id: profile.id,
-            });
-          } else if (
-            userProfile.role === "recruiter" &&
-            targetProfile.role === "student"
-          ) {
-            await supabase.from("matches").insert({
-              student_id: profile.id,
-              recruiter_id: currentUserId,
-            });
-          }
+        let studentId: string | null = null;
+        let recruiterId: string | null = null;
+
+        if (currentRole?.role === "student" && targetRole?.role === "recruiter") {
+          studentId = currentUserId;
+          recruiterId = profile.id;
+        } else if (currentRole?.role === "recruiter" && targetRole?.role === "student") {
+          studentId = profile.id;
+          recruiterId = currentUserId;
+        }
+
+        if (studentId && recruiterId) {
+          await supabase.from("matches").insert({
+            student_id: studentId,
+            recruiter_id: recruiterId,
+          });
+
+          navigate("/match-banner", {
+            state: { matchedUser: profile },
+          });
+          return;
         }
       }
     }
 
-    // Advance deck
     setIndex((prev) => prev + 1);
     setExpanded(false);
   }
 
-  useEffect(() => {
-    setExpanded(false);
-  }, [index]);
-
   if (index >= profiles.length) {
     return (
-      <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-b from-[#93C5FD] to-white text-gray-800 p-6 text-center">
-        <h2 className="text-3xl font-bold mb-4">No more profiles</h2>
-        <p className="mb-2">Check back later for new people 🎉</p>
+      <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-b from-jobless-blue/30 to-white text-jobless-blue p-6 text-center">
+        <h2 className="text-3xl font-header font-bold mb-2">
+          No more profiles
+        </h2>
+        <p className="font-body">Check back later for new people 🎉</p>
       </div>
     );
   }
@@ -135,61 +187,92 @@ export default function SwipeDeck() {
   const current = profiles[index];
 
   return (
-    <div className="relative flex flex-col items-center justify-between min-h-screen w-full bg-gradient-to-b from-[#93C5FD] via-white to-[#E0F2FE] px-4">
+    <div className="relative flex flex-col items-center min-h-screen w-full bg-gradient-to-b from-jobless-blue/10 via-white to-jobless-blue/5 px-4">
       {/* Top bar */}
-      <div className="flex w-full px-6 py-4">
-        <span className="text-4xl font-extrabold text-[#2563EB]">J.</span>
+      <div className="flex justify-between items-center w-full max-w-5xl px-6 py-6">
+        <div className="text-5xl font-header text-jobless-blue md:hidden">J.</div>
       </div>
-  
-      {/* Swipe Card */}
-      <AnimatePresence initial={false} mode="wait">
-        <motion.div
-          key={current.id}
-          className="
-            w-11/12 sm:w-[28rem] lg:w-[32rem] 
-            aspect-[3/4]
-            rounded-3xl shadow-lg bg-center bg-cover relative cursor-pointer
-          "
-          style={{
-            backgroundImage: `url(${
-              current.profile_pic_url || "https://placehold.co/400x500"
-            })`,
-          }}
-          variants={variants}
-          initial="enter"
-          animate="center"
-          exit="exit"
-          drag="x"
-          dragConstraints={{ left: 0, right: 0 }}
-          dragElastic={0.4}
-          onDragEnd={handleDragEnd}
-          onClick={() => setExpanded((prev) => !prev)}
+
+      {/* Card + Controls container */}
+      <div className="flex flex-col md:flex-row items-center justify-center gap-6 w-full flex-1">
+        {/* Dislike button */}
+        <button
+          onClick={() => handleChoice("dislike")}
+          className="hidden md:flex items-center justify-center w-20 h-20 rounded-full bg-white shadow-lg hover:scale-110 transition hover:shadow-red-200"
         >
-          {/* Overlay Info */}
-          <div className="absolute bottom-0 w-full bg-gradient-to-t from-black/70 to-transparent p-6 rounded-b-3xl">
-            <h2 className="text-white text-2xl sm:text-3xl font-bold drop-shadow-md">
-              {current.name}
-            </h2>
-            <p className="text-white/90 text-sm sm:text-base mt-1">
-              {current.role}
-            </p>
-  
-            {/* Tags */}
-            <div className="mt-3 flex flex-wrap gap-2">
-              <span className="rounded-full bg-white/20 px-3 py-1 text-xs sm:text-sm text-white">
-                introvert
-              </span>
-              <span className="rounded-full bg-white/20 px-3 py-1 text-xs sm:text-sm text-white">
-                innovative
-              </span>
-              <span className="rounded-full bg-white/20 px-3 py-1 text-xs sm:text-sm text-white">
-                risk-taker
-              </span>
+          <X className="text-red-500 w-10 h-10" />
+        </button>
+
+        {/* Swipe Card */}
+        <AnimatePresence initial={false} mode="wait">
+          <motion.div
+            key={current.id}
+            className="
+              w-full sm:w-[26rem] md:w-[30rem] lg:w-[34rem] 
+              aspect-[3/4]
+              rounded-3xl shadow-xl bg-center bg-cover relative cursor-pointer
+              overflow-hidden
+            "
+            style={{
+              backgroundImage: `url(${current.profile_pic_url || "https://placehold.co/400x500"})`,
+            }}
+            initial={{ scale: 0.95, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            exit={{ scale: 0.9, opacity: 0 }}
+            drag="x"
+            dragConstraints={{ left: 0, right: 0 }}
+            dragElastic={0.4}
+            onDragEnd={handleDragEnd}
+            onClick={() => setExpanded((prev) => !prev)}
+          >
+            {/* Gradient Overlay */}
+            <div className="absolute bottom-0 w-full bg-gradient-to-t from-black/80 to-transparent p-6">
+              <h2 className="text-white text-2xl sm:text-3xl font-header drop-shadow-md">
+                {current.name}
+              </h2>
+
+              {/* Context aware subtitle */}
+              <p className="text-white/80 text-sm font-body">
+                {current.role === "student"
+                  ? `${current.graduation_year ? `${current.graduation_year} · ` : ""}${current.school} ${current.major ? `· ${current.major}` : ""}`
+                  : `${current.company_name || "Unknown Company"} · ${current.company_industry || "Industry"}`}
+              </p>
+
+              {/* Tags */}
+              <div className="mt-3 flex flex-wrap gap-2">
+                {/* Student tags */}
+                {(current.studentHabits || []).slice(0, 2).map((tag) => (
+                  <span
+                    key={tag}
+                    className="rounded-full bg-blue-500/20 border border-blue-400 px-3 py-1 text-xs sm:text-sm text-blue-700"
+                  >
+                    {tag}
+                  </span>
+                ))}
+
+                {/* Recruiter tags */}
+                {(current.recruiterHabits || []).slice(0, 2).map((tag) => (
+                  <span
+                    key={tag}
+                    className="rounded-full bg-jobless-blue border border-jobless-blue/400 px-3 py-1 text-xs sm:text-sm text-jobless-blue/700"
+                  >
+                    {tag}
+                  </span>
+                ))}
+              </div>
             </div>
-          </div>
-        </motion.div>
-      </AnimatePresence>
-  
+          </motion.div>
+        </AnimatePresence>
+
+        {/* Like button */}
+        <button
+          onClick={() => handleChoice("like")}
+          className="hidden md:flex items-center justify-center w-20 h-20 rounded-full bg-white shadow-lg hover:scale-110 transition hover:shadow-green-200"
+        >
+          <Heart className="text-green-500 w-10 h-10" />
+        </button>
+      </div>
+
       {/* Expanded Bio */}
       <AnimatePresence>
         {expanded && (
@@ -199,7 +282,7 @@ export default function SwipeDeck() {
             animate={{ height: "auto", opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
             transition={{ duration: 0.3 }}
-            className="w-11/12 sm:w-[28rem] lg:w-[32rem] mt-4 bg-white text-gray-800 rounded-xl shadow-md p-4 text-sm sm:text-base"
+            className="w-full sm:w-[26rem] md:w-[30rem] lg:w-[34rem] mt-6 bg-white text-gray-800 rounded-xl shadow-md p-6 text-sm sm:text-base font-body"
           >
             <p>
               <strong>About:</strong> {current.bio || "No bio yet"}
@@ -207,23 +290,23 @@ export default function SwipeDeck() {
           </motion.div>
         )}
       </AnimatePresence>
-  
-      {/* Swipe Icons (no background buttons) */}
-      <div className="w-full flex items-center justify-between px-16 sm:px-32 py-6">
-        {/* Dislike Icon */}
-        <X
+
+      {/* Mobile-only controls */}
+      <div className="flex md:hidden items-center justify-between w-full max-w-xs sm:max-w-md py-8">
+        <button
           onClick={() => handleChoice("dislike")}
-          className="cursor-pointer w-48 h-48 text-[white] hover:scale-110 transition-transform"
-          size={64}
-        />
-  
-        {/* Like Icon */}
-        <Heart
+          className="flex items-center justify-center w-16 h-16 rounded-full bg-white shadow-md hover:scale-110 transition hover:shadow-red-200"
+        >
+          <X className="text-red-500 w-8 h-8" />
+        </button>
+
+        <button
           onClick={() => handleChoice("like")}
-          className="cursor-pointer w-48 h-48 text-[white] hover:scale-110 transition-transform"
-          size={64}
-        />
+          className="flex items-center justify-center w-16 h-16 rounded-full bg-white shadow-md hover:scale-110 transition hover:shadow-green-200"
+        >
+          <Heart className="text-green-500 w-8 h-8" />
+        </button>
       </div>
     </div>
   );
-}  
+}

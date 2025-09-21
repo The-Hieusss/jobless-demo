@@ -60,7 +60,8 @@ export default function StudentFormWizard() {
       const { error } = await supabase.storage
         .from("profile-pics")
         .upload(`${user.id}/profile.png`, form.profile_pic, { upsert: true });
-      if (!error) {
+      if (error) console.error("❌ Upload profile pic failed:", error.message);
+      else {
         const { data: url } = supabase.storage
           .from("profile-pics")
           .getPublicUrl(`${user.id}/profile.png`);
@@ -74,7 +75,8 @@ export default function StudentFormWizard() {
       const { error } = await supabase.storage
         .from("resumes")
         .upload(`${user.id}/resume.pdf`, form.resume, { upsert: true });
-      if (!error) {
+      if (error) console.error("❌ Upload resume failed:", error.message);
+      else {
         const { data: url } = supabase.storage
           .from("resumes")
           .getPublicUrl(`${user.id}/resume.pdf`);
@@ -82,48 +84,60 @@ export default function StudentFormWizard() {
       }
     }
 
-    // Save profile + student details
-    await supabase
-      .from("profiles")
-      .update({
-        name: form.name,
-        bio: form.bio,
-        profile_pic_url,
-        resume_url,
-      })
-      .eq("id", user.id);
-
-    await supabase.from("student_details").upsert({
+    // Save profile
+    const { error: profileError } = await supabase.from("profiles").upsert({
       id: user.id,
-      school: form.school,
-      birthday: form.birthday,
-      education_level: form.education_level,
-      major: form.major,
-      graduation_year: form.graduation_year
-        ? parseInt(form.graduation_year)
-        : null,
-      industries: form.industries
-        ? form.industries.split(",").map((i) => i.trim())
-        : [],
-      role_types: form.role_types
-        ? form.role_types.split(",").map((i) => i.trim())
-        : [],
+      name: form.name,
+      bio: form.bio,
+      profile_pic_url,
+      resume_url,
+      role: "student",
     });
+    if (profileError)
+      console.error("❌ Profile upsert failed:", profileError.message);
 
-    // ✅ Save into new student_habits table
-    await supabase.from("student_habits").upsert({
-      id: user.id,
-      personality: habits.personality,
-      three_words: habits.threeWords,
-      team_role: habits.teamRole,
-      startup_style: habits.startupStyle,
-      chaos_response: habits.chaosResponse,
-    });
+    // Save student details
+    const { error: detailsError } = await supabase
+      .from("student_details")
+      .upsert(
+        {
+          id: user.id,
+          school: form.school,
+          birthday: form.birthday,
+          education_level: form.education_level,
+          major: form.major,
+          graduation_year: form.graduation_year
+            ? parseInt(form.graduation_year)
+            : null,
+          industries: form.industries
+            ? form.industries.split(",").map((i) => i.trim())
+            : [],
+          role_types: form.role_types
+            ? form.role_types.split(",").map((i) => i.trim())
+            : [],
+        },
+        { onConflict: "id" }
+      );
+    if (detailsError)
+      console.error("❌ Student details upsert failed:", detailsError.message);
 
-    // Show "Let's Match" for 3s then go to swipe
-    setTimeout(() => {
-      navigate("/post-signup");
-    }, 3000);
+    // Save habits
+    const { error: habitsError } = await supabase.from("student_habits").upsert(
+      {
+        id: user.id,
+        personality: habits.personality,
+        three_words: habits.threeWords,
+        team_role: habits.teamRole,
+        startup_style: habits.startupStyle,
+        chaos_response: habits.chaosResponse,
+      },
+      { onConflict: "id" }
+    );
+    if (habitsError)
+      console.error("❌ Student habits upsert failed:", habitsError.message);
+
+    // Redirect
+    setTimeout(() => navigate("/post-signup"));
   }
 
   const groups = [
@@ -208,37 +222,37 @@ export default function StudentFormWizard() {
             name="school"
             placeholder="School"
             onChange={updateField}
-            className="w-full rounded-full p-3 bg-white font-body"
+            className="w-full rounded-full p-3 bg-white font-body text-jobless-blue placeholder:text-jobless-blue/80"
           />
           <input
             type="date"
             name="birthday"
             onChange={updateField}
-            className="w-full rounded-full p-3 bg-white font-body"
+            className="w-full rounded-full p-3 bg-white font-body text-jobless-blue placeholder:text-jobless-blue/80"
           />
           <input
             name="education_level"
             placeholder="Education Level"
             onChange={updateField}
-            className="w-full rounded-full p-3 bg-white font-body"
+            className="w-full rounded-full p-3 bg-white font-body text-jobless-blue placeholder:text-jobless-blue/80"
           />
           <input
             name="major"
             placeholder="Major"
             onChange={updateField}
-            className="w-full rounded-full p-3 bg-white font-body"
+            className="w-full rounded-full p-3 bg-white font-body text-jobless-blue placeholder:text-jobless-blue/80"
           />
           <input
             name="graduation_year"
             placeholder="Graduation Year"
             onChange={updateField}
-            className="w-full rounded-full p-3 bg-white font-body"
+            className="w-full rounded-full p-3 bg-white font-body text-jobless-blue placeholder:text-jobless-blue/80"
           />
           <textarea
             name="bio"
             placeholder="Short Bio"
             onChange={updateField}
-            className="w-full rounded-2xl p-3 bg-white font-body"
+            className="w-full rounded-2xl p-3 bg-white font-body text-jobless-blue placeholder:text-jobless-blue/80 h-24 resize-none"
           />
 
           <label className="flex items-center gap-3 w-full rounded-full px-4 py-3 bg-white cursor-pointer">

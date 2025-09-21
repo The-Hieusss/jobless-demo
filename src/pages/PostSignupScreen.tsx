@@ -7,7 +7,7 @@ export default function PostSignupScreen() {
 
   useEffect(() => {
     const t = setTimeout(() => {
-      navigate("/", { replace: true });
+      navigate("/people", { replace: true });
     }, 3000);
 
     return () => {
