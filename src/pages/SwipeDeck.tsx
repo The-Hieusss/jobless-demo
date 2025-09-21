@@ -291,22 +291,8 @@ export default function SwipeDeck() {
         )}
       </AnimatePresence>
 
-      {/* Mobile-only controls */}
-      <div className="flex md:hidden items-center justify-between w-full max-w-xs sm:max-w-md py-8">
-        <button
-          onClick={() => handleChoice("dislike")}
-          className="flex items-center justify-center w-16 h-16 rounded-full bg-white shadow-md hover:scale-110 transition hover:shadow-red-200"
-        >
-          <X className="text-red-500 w-8 h-8" />
-        </button>
-
-        <button
-          onClick={() => handleChoice("like")}
-          className="flex items-center justify-center w-16 h-16 rounded-full bg-white shadow-md hover:scale-110 transition hover:shadow-green-200"
-        >
-          <Heart className="text-green-500 w-8 h-8" />
-        </button>
-      </div>
+      {/* Mobile controls intentionally removed — keep DOM minimal for mobile */}
+      <div className="hidden" aria-hidden="true" />
     </div>
   );
 }
