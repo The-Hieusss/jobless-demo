@@ -1,7 +1,16 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import supabase from "../utils/supabase";
-import { File, School, Briefcase, Calendar, Building2, Pencil, Save, X } from "lucide-react";
+import {
+  File,
+  School,
+  Briefcase,
+  Calendar,
+  Building2,
+  Pencil,
+  Save,
+  X,
+} from "lucide-react";
 
 export default function ProfilePage() {
   const { id } = useParams<{ id: string }>();
@@ -18,10 +27,13 @@ export default function ProfilePage() {
   const [formData, setFormData] = useState<any>({});
 
   // handle profile picture selection & upload
-  async function handleProfilePicChange(e: React.ChangeEvent<HTMLInputElement>) {
+  async function handleProfilePicChange(
+    e: React.ChangeEvent<HTMLInputElement>
+  ) {
     const file = e.target.files?.[0];
     if (!file || !profile) return;
     setUploadingPic(true);
+
     try {
       const mimeToExt: Record<string, string> = {
         "image/jpeg": "jpg",
@@ -29,24 +41,42 @@ export default function ProfilePage() {
         "image/png": "png",
         "image/webp": "webp",
       };
-      const ext = mimeToExt[file.type] || (file.name.includes(".") ? file.name.split(".").pop() || "png" : "png");
+      const ext =
+        mimeToExt[file.type] ||
+        (file.name.includes(".") ? file.name.split(".").pop() || "png" : "png");
+
       const filename = `${profile.id}/profile.${ext}`;
 
+      // upload to Supabase Storage
       const { error: uploadError } = await supabase.storage
         .from("profile-pics")
-        .upload(filename, file, { upsert: true, contentType: file.type });
+        .upload(filename, file, {
+          upsert: true,
+          contentType: file.type,
+        });
 
-      if (uploadError) {
-        console.error("Profile pic upload failed:", uploadError);
-        return;
-      }
+      if (uploadError) throw uploadError;
 
-      const { data: urlData } = supabase.storage.from("profile-pics").getPublicUrl(filename);
+      // get public URL
+      const { data: urlData } = supabase.storage
+        .from("profile-pics")
+        .getPublicUrl(filename);
+
       const publicUrl = urlData.publicUrl;
 
-      // update local form + profile preview immediately
+      // update DB immediately so it persists
+      const { error: updateError } = await supabase
+        .from("profiles")
+        .update({ profile_pic_url: publicUrl })
+        .eq("id", profile.id);
+
+      if (updateError) throw updateError;
+
+      // update local state
       setFormData((prev: any) => ({ ...prev, profile_pic_url: publicUrl }));
       setProfile((prev: any) => ({ ...prev, profile_pic_url: publicUrl }));
+    } catch (err) {
+      console.error("Profile pic upload failed:", err);
     } finally {
       setUploadingPic(false);
     }
@@ -95,17 +125,22 @@ export default function ProfilePage() {
             .eq("profile_id", id)
             .single();
           if (resByProfile.error && !resByProfile.data) {
-            console.debug("No student_habits row found for id or profile_id:", id, {
-              byIdError: resById.error,
-              byProfileError: resByProfile.error,
-            });
+            console.debug(
+              "No student_habits row found for id or profile_id:",
+              id,
+              {
+                byIdError: resById.error,
+                byProfileError: resByProfile.error,
+              }
+            );
           }
           habitsData = resByProfile.data ?? null;
         } else {
           habitsData = resById.data ?? null;
         }
         setHabits(habitsData);
-        if (habitsData) setFormData((prev: any) => ({ ...prev, ...habitsData }));
+        if (habitsData)
+          setFormData((prev: any) => ({ ...prev, ...habitsData }));
       } else if (profileData.role === "recruiter") {
         const { data: detailsData } = await supabase
           .from("recruiter_details")
@@ -129,17 +164,22 @@ export default function ProfilePage() {
             .eq("profile_id", id)
             .single();
           if (resByProfileR.error && !resByProfileR.data) {
-            console.debug("No recruiter_habits row found for id or profile_id:", id, {
-              byIdError: resByIdR.error,
-              byProfileError: resByProfileR.error,
-            });
+            console.debug(
+              "No recruiter_habits row found for id or profile_id:",
+              id,
+              {
+                byIdError: resByIdR.error,
+                byProfileError: resByProfileR.error,
+              }
+            );
           }
           habitsData = resByProfileR.data ?? null;
         } else {
           habitsData = resByIdR.data ?? null;
         }
         setHabits(habitsData);
-        if (habitsData) setFormData((prev: any) => ({ ...prev, ...habitsData }));
+        if (habitsData)
+          setFormData((prev: any) => ({ ...prev, ...habitsData }));
       }
     }
     fetchProfile();
@@ -247,18 +287,16 @@ export default function ProfilePage() {
                 </div>
               )}
             </label>
+          ) : profile.profile_pic_url ? (
+            <img
+              src={profile.profile_pic_url}
+              alt={profile.name}
+              className="w-28 h-28 sm:w-32 sm:h-32 rounded-full border-4 border-jobless-blue shadow-md object-cover"
+            />
           ) : (
-            profile.profile_pic_url ? (
-              <img
-                src={profile.profile_pic_url}
-                alt={profile.name}
-                className="w-28 h-28 sm:w-32 sm:h-32 rounded-full border-4 border-jobless-blue shadow-md object-cover"
-              />
-            ) : (
-              <div className="w-28 h-28 sm:w-32 sm:h-32 rounded-full border-4 border-jobless-blue shadow-md flex items-center justify-center text-jobless-blue/70">
-                <File className="w-6 h-6" />
-              </div>
-            )
+            <div className="w-28 h-28 sm:w-32 sm:h-32 rounded-full border-4 border-jobless-blue shadow-md flex items-center justify-center text-jobless-blue/70">
+              <File className="w-6 h-6" />
+            </div>
           )}
 
           {editing ? (
@@ -350,7 +388,8 @@ export default function ProfilePage() {
         {habits && (
           <div className="bg-jobless-blue/5 rounded-xl p-4 sm:p-6 space-y-4">
             <h2 className="font-header text-lg sm:text-xl text-jobless-blue">
-              🌟 {profile.role === "student" ? "Job Style Habits" : "Work Style"}
+              🌟{" "}
+              {profile.role === "student" ? "Job Style Habits" : "Work Style"}
             </h2>
             <div className="space-y-3 font-body">
               {Object.entries(habits).map(([key, values]) => {
@@ -414,28 +453,36 @@ function StudentDetails({ details, editing, formData, setFormData }: any) {
             <input
               type="text"
               value={formData.school || ""}
-              onChange={(e) => setFormData({ ...formData, school: e.target.value })}
+              onChange={(e) =>
+                setFormData({ ...formData, school: e.target.value })
+              }
               placeholder="School"
               className="p-2 border rounded"
             />
             <input
               type="text"
               value={formData.education_level || ""}
-              onChange={(e) => setFormData({ ...formData, education_level: e.target.value })}
+              onChange={(e) =>
+                setFormData({ ...formData, education_level: e.target.value })
+              }
               placeholder="Education Level"
               className="p-2 border rounded"
             />
             <input
               type="number"
               value={formData.graduation_year || ""}
-              onChange={(e) => setFormData({ ...formData, graduation_year: e.target.value })}
+              onChange={(e) =>
+                setFormData({ ...formData, graduation_year: e.target.value })
+              }
               placeholder="Graduation Year"
               className="p-2 border rounded"
             />
             <input
               type="text"
               value={formData.major || ""}
-              onChange={(e) => setFormData({ ...formData, major: e.target.value })}
+              onChange={(e) =>
+                setFormData({ ...formData, major: e.target.value })
+              }
               placeholder="Major"
               className="p-2 border rounded"
             />
@@ -445,7 +492,9 @@ function StudentDetails({ details, editing, formData, setFormData }: any) {
               onChange={(e) =>
                 setFormData({
                   ...formData,
-                  industries: e.target.value.split(",").map((s: string) => s.trim()),
+                  industries: e.target.value
+                    .split(",")
+                    .map((s: string) => s.trim()),
                 })
               }
               placeholder="Industries (comma separated)"
@@ -457,7 +506,9 @@ function StudentDetails({ details, editing, formData, setFormData }: any) {
               onChange={(e) =>
                 setFormData({
                   ...formData,
-                  role_types: e.target.value.split(",").map((s: string) => s.trim()),
+                  role_types: e.target.value
+                    .split(",")
+                    .map((s: string) => s.trim()),
                 })
               }
               placeholder="Role Types (comma separated)"
@@ -466,12 +517,27 @@ function StudentDetails({ details, editing, formData, setFormData }: any) {
           </>
         ) : (
           <>
-            <p className="flex items-center gap-2"><School className="w-4 h-4" /> {details.school}</p>
-            <p className="flex items-center gap-2"><Briefcase className="w-4 h-4" /> {details.education_level}</p>
-            <p className="flex items-center gap-2"><Calendar className="w-4 h-4" /> Graduation: {details.graduation_year}</p>
-            <p><span className="font-semibold">Major:</span> {details.major}</p>
-            <p><span className="font-semibold">Industries:</span> {details.industries?.join(", ")}</p>
-            <p><span className="font-semibold">Role Types:</span> {details.role_types?.join(", ")}</p>
+            <p className="flex items-center gap-2">
+              <School className="w-4 h-4" /> {details.school}
+            </p>
+            <p className="flex items-center gap-2">
+              <Briefcase className="w-4 h-4" /> {details.education_level}
+            </p>
+            <p className="flex items-center gap-2">
+              <Calendar className="w-4 h-4" /> Graduation:{" "}
+              {details.graduation_year}
+            </p>
+            <p>
+              <span className="font-semibold">Major:</span> {details.major}
+            </p>
+            <p>
+              <span className="font-semibold">Industries:</span>{" "}
+              {details.industries?.join(", ")}
+            </p>
+            <p>
+              <span className="font-semibold">Role Types:</span>{" "}
+              {details.role_types?.join(", ")}
+            </p>
           </>
         )}
       </div>
@@ -491,21 +557,27 @@ function RecruiterDetails({ details, editing, formData, setFormData }: any) {
             <input
               type="text"
               value={formData.company_name || ""}
-              onChange={(e) => setFormData({ ...formData, company_name: e.target.value })}
+              onChange={(e) =>
+                setFormData({ ...formData, company_name: e.target.value })
+              }
               placeholder="Company Name"
               className="p-2 border rounded"
             />
             <input
               type="text"
               value={formData.user_role || ""}
-              onChange={(e) => setFormData({ ...formData, user_role: e.target.value })}
+              onChange={(e) =>
+                setFormData({ ...formData, user_role: e.target.value })
+              }
               placeholder="Your Role"
               className="p-2 border rounded"
             />
             <input
               type="text"
               value={formData.company_industry || ""}
-              onChange={(e) => setFormData({ ...formData, company_industry: e.target.value })}
+              onChange={(e) =>
+                setFormData({ ...formData, company_industry: e.target.value })
+              }
               placeholder="Industry"
               className="p-2 border rounded"
             />
@@ -515,7 +587,9 @@ function RecruiterDetails({ details, editing, formData, setFormData }: any) {
               onChange={(e) =>
                 setFormData({
                   ...formData,
-                  looking_for: e.target.value.split(",").map((s: string) => s.trim()),
+                  looking_for: e.target.value
+                    .split(",")
+                    .map((s: string) => s.trim()),
                 })
               }
               placeholder="Looking For (comma separated)"
@@ -527,7 +601,9 @@ function RecruiterDetails({ details, editing, formData, setFormData }: any) {
               onChange={(e) =>
                 setFormData({
                   ...formData,
-                  preferred_majors: e.target.value.split(",").map((s: string) => s.trim()),
+                  preferred_majors: e.target.value
+                    .split(",")
+                    .map((s: string) => s.trim()),
                 })
               }
               placeholder="Preferred Majors (comma separated)"
@@ -536,19 +612,37 @@ function RecruiterDetails({ details, editing, formData, setFormData }: any) {
             <input
               type="text"
               value={formData.work_type || ""}
-              onChange={(e) => setFormData({ ...formData, work_type: e.target.value })}
+              onChange={(e) =>
+                setFormData({ ...formData, work_type: e.target.value })
+              }
               placeholder="Work Type"
               className="p-2 border rounded col-span-2"
             />
           </>
         ) : (
           <>
-            <p className="flex items-center gap-2"><Building2 className="w-4 h-4" /> {details.company_name}</p>
-            <p className="flex items-center gap-2"><Briefcase className="w-4 h-4" /> {details.user_role}</p>
-            <p><span className="font-semibold">Industry:</span> {details.company_industry}</p>
-            <p><span className="font-semibold">Looking For:</span> {details.looking_for?.join(", ")}</p>
-            <p><span className="font-semibold">Preferred Majors:</span> {details.preferred_majors?.join(", ")}</p>
-            <p><span className="font-semibold">Work Type:</span> {details.work_type}</p>
+            <p className="flex items-center gap-2">
+              <Building2 className="w-4 h-4" /> {details.company_name}
+            </p>
+            <p className="flex items-center gap-2">
+              <Briefcase className="w-4 h-4" /> {details.user_role}
+            </p>
+            <p>
+              <span className="font-semibold">Industry:</span>{" "}
+              {details.company_industry}
+            </p>
+            <p>
+              <span className="font-semibold">Looking For:</span>{" "}
+              {details.looking_for?.join(", ")}
+            </p>
+            <p>
+              <span className="font-semibold">Preferred Majors:</span>{" "}
+              {details.preferred_majors?.join(", ")}
+            </p>
+            <p>
+              <span className="font-semibold">Work Type:</span>{" "}
+              {details.work_type}
+            </p>
           </>
         )}
       </div>
