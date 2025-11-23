@@ -187,7 +187,7 @@ export default function RecruiterFormWizard() {
   ];
 
   return (
-    <div className="relative flex min-h-screen bg-gradient-to-b from-jobless-white to-jobless-blue/40 items-center justify-center px-4">
+    <div className="relative flex min-h-screen app-bg items-center justify-center px-4">
       {/* Step 1: Recruiter Profile */}
       {step === 1 && (
         <form
@@ -195,62 +195,62 @@ export default function RecruiterFormWizard() {
             e.preventDefault();
             setStep(2);
           }}
-          className="bg-jobless-blue/80 backdrop-blur-md rounded-2xl p-6 sm:p-10 w-full max-w-xl shadow-lg space-y-4"
+          className="glass-card border border-white/70 backdrop-blur-md rounded-3xl p-6 sm:p-10 w-full max-w-xl shadow-xl space-y-4"
         >
-          <h1 className="font-header text-white text-2xl sm:text-3xl mb-4">
+          <h1 className="font-header text-[#0c0b1f] text-2xl sm:text-3xl mb-4">
             Recruiter Profile
           </h1>
           <input
             name="name"
             placeholder="Full Name"
             onChange={updateField}
-            className="w-full rounded-full p-3 bg-white font-body placeholder:text-jobless-blue/80"
+            className="w-full rounded-2xl p-3 bg-white border border-slate-200 font-body text-slate-700 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-jobless-blue/30"
           />
           <input
             name="company_name"
             placeholder="Company Name"
             onChange={updateField}
-            className="w-full rounded-full p-3 bg-white font-body placeholder:text-jobless-blue/80"
+            className="w-full rounded-2xl p-3 bg-white border border-slate-200 font-body text-slate-700 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-jobless-blue/30"
           />
           <input
             name="company_industry"
             placeholder="Company Industry"
             onChange={updateField}
-            className="w-full rounded-full p-3 bg-white font-body placeholder:text-jobless-blue"
+            className="w-full rounded-2xl p-3 bg-white border border-slate-200 font-body text-slate-700 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-jobless-blue/30"
           />
           <input
             name="user_role"
             placeholder="Your Role"
             onChange={updateField}
-            className="w-full rounded-full p-3 bg-white font-body placeholder:text-jobless-blue"
+            className="w-full rounded-2xl p-3 bg-white border border-slate-200 font-body text-slate-700 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-jobless-blue/30"
           />
           <input
             name="looking_for"
             placeholder="Looking For (comma separated)"
             onChange={updateField}
-            className="w-full rounded-full p-3 bg-white font-body placeholder:text-jobless-blue"
+            className="w-full rounded-2xl p-3 bg-white border border-slate-200 font-body text-slate-700 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-jobless-blue/30"
           />
           <input
             name="preferred_majors"
             placeholder="Preferred Majors (comma separated)"
             onChange={updateField}
-            className="w-full rounded-full p-3 bg-white font-body placeholder:text-jobless-blue"
+            className="w-full rounded-2xl p-3 bg-white border border-slate-200 font-body text-slate-700 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-jobless-blue/30"
           />
           <input
             name="work_type"
             placeholder="Work Type (remote, hybrid, in-person)"
             onChange={updateField}
-            className="w-full rounded-full p-3 bg-white font-body placeholder:text-jobless-blue"
+            className="w-full rounded-2xl p-3 bg-white border border-slate-200 font-body text-slate-700 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-jobless-blue/30"
           />
           <textarea
             name="bio"
             placeholder="Short Bio"
             onChange={updateField}
-            className="w-full rounded-2xl p-3 bg-white font-body placeholder:text-jobless-blue h-24 resize-none"
+            className="w-full rounded-2xl p-3 bg-white border border-slate-200 font-body text-slate-700 placeholder:text-slate-400 h-24 resize-none focus:outline-none focus:ring-2 focus:ring-jobless-blue/30"
           />
 
           {/* Upload Profile Pic */}
-          <label className="flex items-center gap-3 w-full rounded-full px-4 py-3 bg-white cursor-pointer">
+          <label className="flex items-center gap-3 w-full rounded-full px-4 py-3 bg-white cursor-pointer border border-slate-200">
             <input
               type="file"
               accept="image/*"
@@ -260,7 +260,7 @@ export default function RecruiterFormWizard() {
               }
             />
             <span className="inline-flex items-center gap-2 text-jobless-blue font-body font-medium">
-              <Camera className="w-5 h-5 text-yellow-400" />
+              <Camera className="w-5 h-5 text-jobless-gold" />
               Upload photo
             </span>
             <span className="ml-auto text-sm text-jobless-blue/70 truncate max-w-[8rem]">
@@ -269,7 +269,7 @@ export default function RecruiterFormWizard() {
           </label>
 
           {/* Upload Resume */}
-          <label className="flex items-center gap-3 w-full rounded-full px-4 py-3 bg-white cursor-pointer">
+          <label className="flex items-center gap-3 w-full rounded-full px-4 py-3 bg-white cursor-pointer border border-slate-200">
             <input
               type="file"
               accept="application/pdf"
@@ -289,7 +289,7 @@ export default function RecruiterFormWizard() {
 
           <button
             type="submit"
-            className="w-full bg-white text-jobless-blue font-body font-semibold py-3 rounded-full"
+            className="gradient-button w-full text-[#0c0b1f] font-body font-semibold py-3 rounded-full"
           >
             Next
           </button>
@@ -300,18 +300,18 @@ export default function RecruiterFormWizard() {
       {step === 2 && (
         <form
           onSubmit={handleSubmit}
-          className="bg-white rounded-2xl p-6 sm:p-10 w-full max-w-4xl shadow-lg space-y-8"
+          className="glass-card border border-white/70 rounded-3xl p-6 sm:p-10 w-full max-w-4xl shadow-xl space-y-8"
         >
-          <h1 className="font-header text-jobless-blue text-2xl sm:text-3xl">
+          <h1 className="font-header text-[#0c0b1f] text-2xl sm:text-3xl">
             Let’s talk, job style habits!
           </h1>
-          <p className="font-body text-jobless-blue/90">
+          <p className="font-body text-slate-600">
             Will they become your office buddy or baddie? You go first!
           </p>
 
           {groups.map((group) => (
             <div key={group.key} className="space-y-2">
-              <h2 className="font-body font-semibold text-jobless-blue">
+              <h2 className="font-body font-semibold text-[#0c0b1f]">
                 {group.label}
               </h2>
               <div className="flex flex-wrap gap-3">
@@ -335,7 +335,7 @@ export default function RecruiterFormWizard() {
 
           <button
             type="submit"
-            className="w-full bg-jobless-blue text-white font-body font-semibold py-3 rounded-full"
+            className="gradient-button w-full text-[#0c0b1f] font-body font-semibold py-3 rounded-full"
           >
             Finish
           </button>

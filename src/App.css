@@ -1,0 +1,437 @@
+/* Shared visual styles for the new Jobless identity */
+
+.app-bg {
+  background:
+    radial-gradient(circle at 12% 10%, rgba(238, 187, 14, 0.22), transparent 32%),
+    radial-gradient(circle at 88% 8%, rgba(67, 67, 192, 0.16), transparent 34%),
+    radial-gradient(circle at 18% 82%, rgba(220, 129, 65, 0.18), transparent 36%),
+    linear-gradient(180deg, #ffffff 0%, #fff8ed 50%, #f6e9d8 100%);
+}
+
+.glass-card {
+  background: transparent;
+  backdrop-filter: blur(16px);
+  box-shadow: var(--card-shadow);
+}
+
+.gradient-button {
+  background: var(--jobless-gradient);
+  color: #0c0b1f;
+  box-shadow: 0 12px 30px rgba(67, 67, 192, 0.22);
+  transition: transform 150ms ease, box-shadow 150ms ease, opacity 150ms ease;
+}
+
+.gradient-button:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 16px 40px rgba(67, 67, 192, 0.28);
+}
+
+.pill {
+  border-radius: 9999px;
+  padding: 0.5rem 1.25rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: rgba(12, 11, 31, 0.05);
+}
+
+.badge-soft {
+  background: rgba(67, 67, 192, 0.1);
+  color: #0c0b1f;
+}
+
+.floating-ornament {
+  width: 180px;
+  height: 180px;
+  filter: blur(70px);
+  opacity: 0.5;
+  position: absolute;
+  border-radius: 50%;
+  z-index: 0;
+}
+
+.floating-ornament.purple {
+  background: #4343c0;
+  top: -60px;
+  right: 8%;
+}
+
+.floating-ornament.gold {
+  background: #eebb0e;
+  bottom: 12%;
+  left: 6%;
+}
+
+.floating-ornament.apricot {
+  background: #dc8141;
+  top: 35%;
+  right: 20%;
+}
+
+/* Hero "Game" bubble */
+.game-bubble {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 16px;
+  border-radius: 18px;
+  background: var(--jobless-gradient);
+  isolation: isolate;
+  box-shadow: 0 10px 24px rgba(67, 67, 192, 0.18);
+}
+
+.game-bubble__fill {
+  position: absolute;
+  inset: 2px;
+  border-radius: 16px;
+  background: #ffffff;
+  z-index: -1;
+}
+
+.game-bubble__text {
+  position: relative;
+  font-weight: 800;
+  font-size: 1.2em;
+  background: var(--jobless-gradient);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.game-bubble__tail {
+  position: absolute;
+  bottom: -11px;
+  left: 28px;
+  width: 32px;
+  height: 20px;
+  z-index: -2;
+}
+
+.game-bubble__tail::before,
+.game-bubble__tail::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  clip-path: polygon(0 0, 100% 50%, 0 100%, 20% 60%, 20% 40%);
+  border-radius: 6px;
+}
+
+.game-bubble__tail::before {
+  background: var(--jobless-gradient);
+}
+
+.game-bubble__tail::after {
+  inset: 2px 3px 2px 3px;
+  background: #ffffff;
+}
+
+/* Gradient outline pill */
+.why-pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 20px;
+  border-radius: 9999px;
+  border: 2px solid transparent;
+  background:
+    linear-gradient(#ffffff, #ffffff) padding-box,
+    var(--jobless-gradient) border-box;
+  box-shadow: 0 6px 16px rgba(67, 67, 192, 0.1);
+}
+
+.why-pill__text {
+  font-weight: 700;
+  font-size: 1rem;
+  background: var(--jobless-gradient);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* Feature cards */
+.feature-card {
+  position: relative;
+  min-height: 230px;
+}
+
+.feature-pattern::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image:
+    radial-gradient(circle at 20px 20px, rgba(0, 0, 0, 0.02) 2px, transparent 0),
+    linear-gradient(135deg, rgba(0, 0, 0, 0.02) 12%, transparent 12%),
+    linear-gradient(45deg, rgba(0, 0, 0, 0.02) 12%, transparent 12%);
+  background-size: 80px 80px, 90px 90px, 90px 90px;
+  background-position: 0 0, 0 0, 20px 20px;
+  opacity: 0.4;
+  pointer-events: none;
+}
+
+.feature-title-primary {
+  background: linear-gradient(90deg, #4a49c0 0%, #7a66c5 40%, #9c7bc3 70%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.feature-title-accent {
+  background: linear-gradient(90deg, #d6722f 0%, #f3b316 80%, #f6c220 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* Hero CTA Button */
+.hero-cta-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 16px;
+  padding: 20px 24px 20px 32px;
+  border-radius: 20px;
+  background: linear-gradient(135deg, #5a4fc7 0%, #8b6cc4 30%, #c78a5a 70%, #dba344 100%);
+  color: white;
+  text-decoration: none;
+  box-shadow: 0 12px 32px rgba(90, 79, 199, 0.3);
+  transition: transform 150ms ease, box-shadow 150ms ease;
+}
+
+.hero-cta-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 16px 40px rgba(90, 79, 199, 0.4);
+}
+
+.hero-cta-arrow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: 2px solid rgba(255, 255, 255, 0.6);
+  color: white;
+}
+
+/* Navbar pill */
+.nav-shell {
+  flex: 1;
+  display: none;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 18px;
+  border: 1.5px solid #111;
+  border-radius: 9999px;
+  background: #f7f7f7;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.06);
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+@media (min-width: 1024px) {
+  .nav-shell {
+    display: flex;
+  }
+}
+
+.nav-link {
+  color: #1b1b1b;
+  font-size: 1rem;
+  text-decoration: none;
+  transition: color 150ms ease, transform 150ms ease;
+}
+
+.nav-link:hover {
+  color: #4343c0;
+  transform: translateY(-1px);
+}
+
+.nav-cta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px 18px;
+  border-radius: 9999px;
+  background: #0d0d0d;
+  color: white;
+  font-size: 1rem;
+  text-decoration: none;
+  transition: transform 150ms ease, box-shadow 150ms ease;
+  box-shadow: 0 10px 22px rgba(0, 0, 0, 0.2);
+}
+
+.nav-cta:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 12px 26px rgba(0, 0, 0, 0.24);
+}
+
+.mobile-toggle {
+  display: inline-flex;
+  border: 1.5px solid #0f172a;
+  background: #ffffff;
+  border-radius: 12px;
+  padding: 8px 10px;
+  flex-direction: column;
+  gap: 5px;
+  margin-left: auto;
+  cursor: pointer;
+}
+
+@media (min-width: 1024px) {
+  .mobile-toggle {
+    display: none;
+  }
+}
+
+.burger-line {
+  display: block;
+  width: 18px;
+  height: 2px;
+  background: #0f172a;
+  transition: transform 150ms ease, opacity 150ms ease;
+}
+
+.burger-line.open:nth-child(1) {
+  transform: translateY(4px) rotate(45deg);
+}
+.burger-line.open:nth-child(2) {
+  opacity: 0;
+}
+.burger-line.open:nth-child(3) {
+  transform: translateY(-4px) rotate(-45deg);
+}
+
+/* Problem section avatars */
+.why-visual {
+  position: relative;
+}
+
+.why-chat {
+  position: absolute;
+  right: 8px;
+  top: -24px;
+}
+
+.why-recruiter-tag {
+  position: absolute;
+  top: 0;
+  right: 8px;
+}
+
+.avatar-fox {
+  position: absolute;
+  bottom: 0;
+  left: 12px;
+}
+
+.avatar-suit {
+  position: absolute;
+  bottom: 0;
+  right: 24px;
+}
+
+/* Mobile nav styles */
+.mobile-nav {
+  position: absolute;
+  top: 100%;
+  left: 16px;
+  right: 16px;
+  flex-direction: column;
+  padding: 0;
+  max-height: 0;
+  overflow: hidden;
+  opacity: 0;
+  transition: max-height 300ms ease, opacity 200ms ease, padding 200ms ease;
+  border-radius: 20px;
+  background: #f7f7f7;
+  border: 1.5px solid #111;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.12);
+}
+
+.mobile-nav.open {
+  max-height: 400px;
+  opacity: 1;
+  padding: 20px;
+  display: flex;
+}
+
+.mobile-nav .nav-links {
+  flex-direction: column;
+  align-items: stretch;
+  gap: 0;
+  width: 100%;
+}
+
+.mobile-nav .nav-links .nav-link {
+  display: block;
+  padding: 14px 0;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+  font-size: 1.05rem;
+}
+
+.mobile-nav .nav-links .nav-link:last-child {
+  border-bottom: none;
+}
+
+.mobile-nav .nav-actions {
+  flex-direction: column;
+  align-items: stretch;
+  gap: 12px;
+  width: 100%;
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.mobile-nav .nav-actions .nav-link {
+  text-align: center;
+  padding: 12px;
+}
+
+.mobile-nav .nav-cta {
+  width: 100%;
+  text-align: center;
+  padding: 14px 18px;
+  font-size: 1rem;
+}
+
+@media (max-width: 640px) {
+  .mobile-nav {
+    left: 12px;
+    right: 12px;
+  }
+  .mobile-nav .nav-links .nav-link {
+    font-size: 1rem;
+    padding: 12px 0;
+  }
+  .why-chat {
+    position: relative;
+    right: auto;
+    top: auto;
+    margin-bottom: 12px;
+    text-align: center;
+  }
+  .why-recruiter-tag {
+    position: relative;
+    right: auto;
+    top: auto;
+    margin-bottom: 12px;
+  }
+  .avatar-fox,
+  .avatar-suit {
+    position: relative;
+    bottom: auto;
+    left: auto;
+    right: auto;
+    margin: 0 auto;
+    height: 150px !important;
+    width: 120px !important;
+  }
+  .why-visual {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    min-height: 260px;
+  }
+}

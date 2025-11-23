@@ -33,11 +33,11 @@ export default function Layout() {
   ];
 
   return (
-    <div className="flex h-screen">
+    <div className="flex h-screen app-bg">
       {/* Desktop Sidebar */}
-      <aside className="hidden md:flex flex-col justify-between w-24 bg-gradient-to-b from-white to-jobless-blue/30 text-jobless-blue p-6">
+      <aside className="hidden md:flex flex-col justify-between w-24 bg-white/80 backdrop-blur border-r border-white/70 text-jobless-blue p-6 shadow-sm">
         {/* Logo */}
-        <div className="text-5xl font-header text-jobless-blue">J.</div>
+        <div className="h-12 w-12 rounded-2xl" style={{ background: "var(--jobless-gradient)" }} />
 
         {/* Nav Items */}
         <div className="flex flex-col space-y-10 mt-12">
@@ -63,7 +63,7 @@ export default function Layout() {
             className="text-4xl font-light text-jobless-blue/70 hover:text-jobless-blue"
             onClick={handleSignOut}
           >
-            <LogOut className="w-8 h-8 text-black" />
+            <LogOut className="w-8 h-8 text-jobless-blue" />
           </button>
         </div>
       </aside>
@@ -74,7 +74,7 @@ export default function Layout() {
       </main>
 
       {/* Mobile Bottom Nav */}
-      <nav className="fixed md:hidden bottom-0 left-0 right-0 bg-jobless-white border-t border-jobless-blue/20 flex justify-around py-2">
+      <nav className="fixed md:hidden bottom-0 left-0 right-0 bg-white/90 backdrop-blur border-t border-jobless-blue/20 flex justify-around py-2">
         {navItems.map((item) => (
           <Link
             key={item.path}

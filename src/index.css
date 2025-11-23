@@ -1,4 +1,4 @@
-@import url("https://fonts.googleapis.com/css2?family=Gasoek+One&family=Rethink+Sans:wght@400;500;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap");
 
 @import 'tailwindcss';
 
@@ -19,17 +19,26 @@
   ::file-selector-button {
     border-color: var(--color-gray-200, currentcolor);
   }
+
+  body {
+    font-family: var(--font-body);
+    background-color: var(--color-jobless-white);
+    color: #0f172a;
+  }
 }
 
 /* === Custom Theme Config === */
 @theme {
   /* Brand Colors */
-  --color-jobless-blue: #94D4FF;
+  --color-jobless-blue: #4343c0; /* primary violet */
+  --color-jobless-gold: #eebb0e; /* golden glow */
+  --color-jobless-apricot: #dc8141; /* warm orange */
   --color-jobless-white: #ffffff;
+  --color-jobless-gradient: var(--jobless-gradient);
 
   /* Typography */
-  --font-header: 'Gasoek One', sans-serif;
-  --font-body: 'Rethink Sans', sans-serif;
+  --font-header: 'Poppins', sans-serif;
+  --font-body: 'Poppins', sans-serif;
 
   /* Optional text sizes */
   --text-display: 4rem;   /* ~64px */
@@ -37,7 +46,75 @@
   --text-body: 1rem;      /* ~16px */
 }
 
+:root {
+  --jobless-gradient: linear-gradient(
+    135deg,
+    #4343c0 0%,
+    #4343c0 20%,
+    #eebb0e 50%,
+    #dc8141 80%,
+    #dc8141 100%
+  );
+  --card-shadow: 0 12px 40px rgba(67, 67, 192, 0.12);
+}
+
 @keyframes shimmer {
   0% { transform: translateX(-100%); }
   100% { transform: translateX(100%); }
+}
+
+@keyframes fade-in {
+  0% { opacity: 0; }
+  100% { opacity: 1; }
+}
+
+@keyframes slide-up {
+  0% { opacity: 0; transform: translateY(20px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes bounce-slow {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+.animate-fade-in {
+  animation: fade-in 0.8s ease-out forwards;
+}
+
+.animate-fade-in-delayed {
+  opacity: 0;
+  animation: fade-in 0.8s ease-out 0.4s forwards;
+}
+
+.animate-slide-up {
+  animation: slide-up 0.8s ease-out 0.2s forwards;
+  opacity: 0;
+}
+
+.animate-bounce-slow {
+  animation: bounce-slow 2s ease-in-out infinite;
+}
+
+.delay-150 {
+  animation-delay: 150ms;
+}
+
+.delay-300 {
+  animation-delay: 300ms;
+}
+
+.delay-500 {
+  animation-delay: 500ms;
+}
+
+.delay-1000 {
+  animation-delay: 1000ms;
+}
+
+.gradient-text {
+  background: var(--jobless-gradient);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
 }

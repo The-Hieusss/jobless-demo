@@ -255,8 +255,8 @@ export default function ProfilePage() {
   const isOwner = currentUserId === profile.id;
 
   return (
-    <div className="relative min-h-screen bg-gradient-to-b from-jobless-white to-jobless-blue/40 p-4 sm:p-6 flex justify-center">
-      <div className="bg-white rounded-2xl shadow-lg w-full max-w-3xl p-6 sm:p-8 space-y-8">
+    <div className="relative min-h-screen app-bg p-4 sm:p-6 flex justify-center">
+      <div className="glass-card border border-white/70 rounded-2xl shadow-lg w-full max-w-3xl p-6 sm:p-8 space-y-8">
         {/* Header */}
         <div className="flex flex-col items-center text-center space-y-4">
           {/* Profile picture — editable when owner is editing */}

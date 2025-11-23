@@ -15,20 +15,25 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="relative flex h-screen items-center justify-center bg-gradient-to-b from-jobless-white to-jobless-blue/40">
+    <div className="relative flex h-screen items-center justify-center px-4 overflow-hidden">
+      {/* Background Image */}
+      <div
+        className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+        style={{ backgroundImage: "url('/virtual-space.svg')" }}
+      />
       {/* Login Card */}
       <form
         onSubmit={handleLogin}
-        className="bg-jobless-blue/80 rounded-2xl p-8 w-80 sm:w-96 flex flex-col space-y-6 shadow-lg"
+        className="w-full max-w-md rounded-3xl border border-white/40 bg-white/20 backdrop-blur-xs p-8 shadow-xl space-y-6"
       >
-        <h1 className="text-center font-header text-white text-3xl sm:text-4xl">
+        <h1 className="text-center font-header text-[#0c0b1f] text-3xl sm:text-4xl">
           Welcome back
         </h1>
 
         <input
           type="email"
           placeholder="Email"
-          className="w-full bg-white rounded-full px-4 py-3 text-sm sm:text-base font-body focus:outline-none border border-white/40 placeholder:text-jobless-blue/80"
+          className="w-full rounded-full border border-slate-200 bg-white px-4 py-3 text-sm sm:text-base font-body focus:outline-none focus:ring-2 focus:ring-jobless-blue/30 placeholder:text-slate-400"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
         />
@@ -36,28 +41,28 @@ export default function LoginPage() {
         <input
           type="password"
           placeholder="Password"
-          className="w-full rounded-full bg-white px-4 py-3 text-sm sm:text-base font-body focus:outline-none border border-white/40 placeholder:text-jobless-blue/80"
+          className="w-full rounded-full border border-slate-200 bg-white px-4 py-3 text-sm sm:text-base font-body focus:outline-none focus:ring-2 focus:ring-jobless-blue/30 placeholder:text-slate-400"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
         />
 
         <button
           type="submit"
-          className="w-full text-jobless-white bg-jobless-blue font-body font-semibold py-3 rounded-full hover:opacity-90 transition"
+          className="gradient-button w-full rounded-full py-3 text-sm sm:text-base font-semibold"
         >
           Login
         </button>
 
-        <p className="text-center text-white text-sm">
+        <p className="text-center text-slate-600 text-sm">
           First time here?{" "}
-          <Link to="/signup" className="underline hover:opacity-80">
+          <Link to="/signup" className="font-semibold text-jobless-blue underline">
             Sign up
           </Link>
         </p>
       </form>
 
       {/* Bottom-left Brand */}
-      <h1 className="absolute bottom-6 left-6 font-header text-jobless-blue text-[2.5rem] sm:text-[4rem] md:text-[6rem] lg:text-[7rem] leading-none">
+      <h1 className="absolute bottom-6 left-6 font-header text-[#0c0b1f] text-[2.5rem] sm:text-[4rem] md:text-[6rem] lg:text-[7rem] leading-none drop-shadow-sm">
         Jobless<span className="text-jobless-blue">.</span>
       </h1>
     </div>

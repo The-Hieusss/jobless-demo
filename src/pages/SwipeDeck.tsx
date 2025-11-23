@@ -175,11 +175,11 @@ export default function SwipeDeck() {
 
   if (index >= profiles.length) {
     return (
-      <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-b from-jobless-blue/30 to-white text-jobless-blue p-6 text-center">
+      <div className="min-h-screen flex flex-col items-center justify-center app-bg text-[#0c0b1f] p-6 text-center">
         <h2 className="text-3xl font-header font-bold mb-2">
           No more profiles
         </h2>
-        <p className="font-body">Check back later for new people 🎉</p>
+        <p className="font-body text-slate-700">Check back later for new people 🎉</p>
       </div>
     );
   }
@@ -187,10 +187,13 @@ export default function SwipeDeck() {
   const current = profiles[index];
 
   return (
-    <div className="relative flex flex-col items-center min-h-screen w-full bg-gradient-to-b from-jobless-blue/10 via-white to-jobless-blue/5 px-4">
+    <div className="relative flex flex-col items-center min-h-screen w-full app-bg px-4">
       {/* Top bar */}
       <div className="flex justify-between items-center w-full max-w-5xl px-6 py-6">
-        <div className="text-5xl font-header text-jobless-blue md:hidden">J.</div>
+        <div
+          className="h-10 w-10 rounded-2xl md:hidden"
+          style={{ background: "var(--jobless-gradient)" }}
+        />
       </div>
 
       {/* Card + Controls container */}

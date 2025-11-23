@@ -19,20 +19,25 @@ export default function SignUpPage() {
   }
 
   return (
-    <div className="relative flex min-h-screen items-center justify-center px-4 bg-gradient-to-b from-jobless-white to-jobless-blue/40">
+    <div className="relative flex min-h-screen items-center justify-center px-4 overflow-hidden">
+      {/* Background Image */}
+      <div
+        className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+        style={{ backgroundImage: "url('/virtual-space.svg')" }}
+      />
       {/* Sign Up Card */}
       <form
         onSubmit={handleSignup}
-        className="bg-jobless-blue/80 backdrop-blur-md rounded-2xl p-6 sm:p-8 w-full max-w-sm flex flex-col space-y-6 shadow-lg"
+        className="rounded-3xl p-6 sm:p-8 w-full max-w-sm flex flex-col space-y-6 shadow-xl border border-white/40 bg-white/20 backdrop-blur-xs"
       >
-        <h1 className="text-center font-header text-white text-3xl sm:text-4xl">
+        <h1 className="text-center font-header text-[#0c0b1f] text-3xl sm:text-4xl">
           Create account
         </h1>
 
         <input
           type="email"
           placeholder="Email"
-          className="w-full rounded-full bg-white px-4 py-3 text-sm sm:text-base font-body focus:outline-none focus:ring-2 focus:ring-jobless-blue border border-white/40 placeholder:text-jobless-blue/80"
+          className="w-full rounded-full bg-white px-4 py-3 text-sm sm:text-base font-body focus:outline-none focus:ring-2 focus:ring-jobless-blue/30 border border-slate-200 placeholder:text-slate-400"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
         />
@@ -40,23 +45,23 @@ export default function SignUpPage() {
         <input
           type="password"
           placeholder="Password"
-          className="w-full rounded-full bg-white px-4 py-3 text-sm sm:text-base font-body focus:outline-none focus:ring-2 focus:ring-jobless-blue border border-white/40 placeholder:text-jobless-blue/80"
+          className="w-full rounded-full bg-white px-4 py-3 text-sm sm:text-base font-body focus:outline-none focus:ring-2 focus:ring-jobless-blue/30 border border-slate-200 placeholder:text-slate-400"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
         />
 
         <button
           type="submit"
-          className="w-full bg-jobless-blue text-jobless-white font-body font-semibold py-3 rounded-full hover:opacity-90 transition"
+          className="gradient-button w-full rounded-full py-3 text-sm sm:text-base font-semibold"
         >
           Sign Up
         </button>
 
-        <p className="text-center font-body text-white text-sm sm:text-base">
+        <p className="text-center font-body text-slate-600 text-sm sm:text-base">
           Already have an account?{" "}
           <Link
             to="/login"
-            className="underline hover:opacity-80 font-body font-medium"
+            className="font-semibold text-jobless-blue underline"
           >
             Login
           </Link>
@@ -64,7 +69,7 @@ export default function SignUpPage() {
       </form>
 
       {/* Bottom-left Brand */}
-      <h1 className="absolute bottom-6 left-4 sm:left-6 font-header text-jobless-blue text-[2.5rem] sm:text-[4rem] md:text-[6rem] lg:text-[7rem] leading-none">
+      <h1 className="absolute bottom-6 left-4 sm:left-6 font-header text-[#0c0b1f] text-[2.5rem] sm:text-[4rem] md:text-[6rem] lg:text-[7rem] leading-none drop-shadow-sm">
         Jobless<span className="text-jobless-blue">.</span>
       </h1>
     </div>

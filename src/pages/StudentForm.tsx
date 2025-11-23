@@ -199,7 +199,7 @@ export default function StudentFormWizard() {
   ];
 
   return (
-    <div className="relative flex min-h-screen bg-gradient-to-b from-jobless-white to-jobless-blue/40 items-center justify-center px-4">
+    <div className="relative flex min-h-screen app-bg items-center justify-center px-4">
       {/* Step 1: Student Profile */}
       {step === 1 && (
         <form
@@ -207,55 +207,55 @@ export default function StudentFormWizard() {
             e.preventDefault();
             setStep(2);
           }}
-          className="bg-jobless-blue/80 backdrop-blur-md rounded-2xl p-6 sm:p-10 w-full max-w-xl shadow-lg space-y-4"
+          className="glass-card border border-white/70 backdrop-blur-md rounded-3xl p-6 sm:p-10 w-full max-w-xl shadow-xl space-y-4"
         >
-          <h1 className="font-header text-white text-2xl sm:text-3xl mb-4">
+          <h1 className="font-header text-[#0c0b1f] text-2xl sm:text-3xl mb-4">
             Student Profile
           </h1>
           <input
             name="name"
             placeholder="Full Name"
             onChange={updateField}
-            className="w-full rounded-full p-3 bg-white font-body placeholder:text-jobless-blue/80"
+            className="w-full rounded-2xl p-3 bg-white border border-slate-200 font-body text-slate-700 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-jobless-blue/30"
           />
           <input
             name="school"
             placeholder="School"
             onChange={updateField}
-            className="w-full rounded-full p-3 bg-white font-body text-jobless-blue placeholder:text-jobless-blue/80"
+            className="w-full rounded-2xl p-3 bg-white border border-slate-200 font-body text-slate-700 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-jobless-blue/30"
           />
           <input
             type="date"
             name="birthday"
             onChange={updateField}
-            className="w-full rounded-full p-3 bg-white font-body text-jobless-blue placeholder:text-jobless-blue/80"
+            className="w-full rounded-2xl p-3 bg-white border border-slate-200 font-body text-slate-700 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-jobless-blue/30"
           />
           <input
             name="education_level"
             placeholder="Education Level"
             onChange={updateField}
-            className="w-full rounded-full p-3 bg-white font-body text-jobless-blue placeholder:text-jobless-blue/80"
+            className="w-full rounded-2xl p-3 bg-white border border-slate-200 font-body text-slate-700 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-jobless-blue/30"
           />
           <input
             name="major"
             placeholder="Major"
             onChange={updateField}
-            className="w-full rounded-full p-3 bg-white font-body text-jobless-blue placeholder:text-jobless-blue/80"
+            className="w-full rounded-2xl p-3 bg-white border border-slate-200 font-body text-slate-700 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-jobless-blue/30"
           />
           <input
             name="graduation_year"
             placeholder="Graduation Year"
             onChange={updateField}
-            className="w-full rounded-full p-3 bg-white font-body text-jobless-blue placeholder:text-jobless-blue/80"
+            className="w-full rounded-2xl p-3 bg-white border border-slate-200 font-body text-slate-700 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-jobless-blue/30"
           />
           <textarea
             name="bio"
             placeholder="Short Bio"
             onChange={updateField}
-            className="w-full rounded-2xl p-3 bg-white font-body text-jobless-blue placeholder:text-jobless-blue/80 h-24 resize-none"
+            className="w-full rounded-2xl p-3 bg-white border border-slate-200 font-body text-slate-700 placeholder:text-slate-400 h-24 resize-none focus:outline-none focus:ring-2 focus:ring-jobless-blue/30"
           />
 
-          <label className="flex items-center gap-3 w-full rounded-full px-4 py-3 bg-white cursor-pointer">
+          <label className="flex items-center gap-3 w-full rounded-full px-4 py-3 bg-white cursor-pointer border border-slate-200">
             <input
               type="file"
               accept="image/*"
@@ -268,7 +268,7 @@ export default function StudentFormWizard() {
               }
             />
             <span className="inline-flex items-center gap-2 text-jobless-blue font-body font-medium">
-              <Camera className="w-5 h-5 text-yellow-400" />
+              <Camera className="w-5 h-5 text-jobless-gold" />
               Upload photo
             </span>
             <span className="ml-auto text-sm text-jobless-blue/70 truncate max-w-[8rem]">
@@ -276,7 +276,7 @@ export default function StudentFormWizard() {
             </span>
           </label>
 
-          <label className="flex items-center gap-3 w-full rounded-full px-4 py-3 bg-white cursor-pointer">
+          <label className="flex items-center gap-3 w-full rounded-full px-4 py-3 bg-white cursor-pointer border border-slate-200">
             <input
               type="file"
               accept="application/pdf"
@@ -299,7 +299,7 @@ export default function StudentFormWizard() {
 
           <button
             type="submit"
-            className="w-full bg-white text-jobless-blue font-body font-semibold py-3 rounded-full"
+            className="gradient-button w-full text-[#0c0b1f] font-body font-semibold py-3 rounded-full"
           >
             Next
           </button>
@@ -310,18 +310,18 @@ export default function StudentFormWizard() {
       {step === 2 && (
         <form
           onSubmit={handleSubmit}
-          className="bg-white rounded-2xl p-6 sm:p-10 w-full max-w-4xl shadow-lg space-y-8"
+          className="glass-card border border-white/70 rounded-3xl p-6 sm:p-10 w-full max-w-4xl shadow-xl space-y-8"
         >
-          <h1 className="font-header text-jobless-blue text-2xl sm:text-3xl">
+          <h1 className="font-header text-[#0c0b1f] text-2xl sm:text-3xl">
             Let’s talk, job style habits!
           </h1>
-          <p className="font-body text-jobless-blue/90">
+          <p className="font-body text-slate-600">
             Will they become your office buddy or baddie? You go first!
           </p>
 
           {groups.map((group) => (
             <div key={group.key} className="space-y-2">
-              <h2 className="font-body font-semibold text-jobless-blue">
+              <h2 className="font-body font-semibold text-[#0c0b1f]">
                 {group.label}
               </h2>
               <div className="flex flex-wrap gap-3">
@@ -345,7 +345,7 @@ export default function StudentFormWizard() {
 
           <button
             type="submit"
-            className="w-full bg-jobless-blue text-white font-body font-semibold py-3 rounded-full"
+            className="gradient-button w-full text-[#0c0b1f] font-body font-semibold py-3 rounded-full"
           >
             Finish
           </button>

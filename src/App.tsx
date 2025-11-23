@@ -15,6 +15,7 @@ import ChatRoom from "./pages/ChatRoom";
 import Network from "./pages/Network";
 import Discover from "./pages/Discover";
 import ProfilePage from "./pages/Profile";
+import LandingPage from "./pages/LandingPage";
 import SignUpPage from "./pages/SignUpPage";
 import Layout from "./components/Layout";
 import SplashScreen from "./pages/SplashScreen"; // ✅ re-enable splash
@@ -70,8 +71,11 @@ function App() {
   return (
     <Router>
       <ScrollToTop />
-      <div className="min-h-screen w-full bg-gradient-to-b from-jobless-white to-jobless-blue/40">
+      <div className="min-h-screen w-full bg-jobless-white text-[#0c0b1f]">
         <Routes>
+          {/* Public landing */}
+          <Route path="/" element={<LandingPage />} />
+
           {/* Auth routes */}
           <Route
             path="/login"
@@ -104,7 +108,7 @@ function App() {
           {/* Default route */}
           <Route
             path="*"
-            element={<Navigate to={session ? "/people" : "/login"} />}
+            element={<Navigate to="/" />}
           />
         </Routes>
       </div>
