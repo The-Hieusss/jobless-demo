@@ -17,6 +17,7 @@ import Discover from "./pages/Discover";
 import ProfilePage from "./pages/Profile";
 import LandingPage from "./pages/LandingPage";
 import SignUpPage from "./pages/SignUpPage";
+import RSVPPage from "./pages/RSVPPage";
 import Layout from "./components/Layout";
 import SplashScreen from "./pages/SplashScreen"; // ✅ re-enable splash
 import PostSignupScreen from "./pages/PostSignupScreen";
@@ -75,6 +76,9 @@ function App() {
         <Routes>
           {/* Public landing */}
           <Route path="/" element={<LandingPage />} />
+
+          {/* RSVP/Waitlist */}
+          <Route path="/rsvp" element={<RSVPPage />} />
 
           {/* Auth routes */}
           <Route

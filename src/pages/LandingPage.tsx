@@ -10,9 +10,9 @@ const navLinks = [
 ];
 
 const stats = [
-  { label: "Faster Hiring", value: "3x" },
+  { label: "Job Creation ", value: "2x" },
   { label: "Match Rate", value: "80%+" },
-  { label: "Active Users", value: "90%" },
+  { label: "Engagement Rate", value: "90%" },
 ];
 
 const features = [
@@ -26,8 +26,8 @@ const features = [
     shadow: "0 16px 34px rgba(30, 123, 229, 0.14)",
   },
   {
-    titlePrimary: "AI Interview",
-    titleAccent: "&Match",
+    titlePrimary: "AI Job ",
+    titleAccent: "Creation",
     desc: "Meet your perfect fit faster.",
     image: "/landing/aspect2.svg",
     bg: "linear-gradient(135deg, #eff3ff 0%, #f7f5ff 100%)",
@@ -87,11 +87,8 @@ export default function LandingPage() {
             ))}
           </div>
           <div className="nav-actions flex items-center gap-6">
-            <Link to="/login" className="nav-link">
-              Log In
-            </Link>
-            <Link to="/signup" className="nav-cta">
-              Experience JOBLESS
+            <Link to="/rsvp" className="nav-cta">
+              Join Waitlist
             </Link>
           </div>
         </div>
@@ -110,11 +107,8 @@ export default function LandingPage() {
             ))}
           </div>
           <div className="nav-actions flex items-center gap-6">
-            <Link to="/login" className="nav-link" onClick={() => setNavOpen(false)}>
-              Log In
-            </Link>
-            <Link to="/signup" className="nav-cta" onClick={() => setNavOpen(false)}>
-              Experience JOBLESS
+            <Link to="/rsvp" className="nav-cta" onClick={() => setNavOpen(false)}>
+              Join Waitlist
             </Link>
           </div>
         </div>
@@ -138,10 +132,10 @@ export default function LandingPage() {
           </p>
           <div className="flex flex-wrap items-center justify-center gap-3">
             <Link
-              to="/signup"
+              to="/rsvp"
               className="hero-cta-button"
             >
-              <span className="text-lg font-semibold">Experience JOBLESS</span>
+              <span className="text-lg font-semibold">Join the Waitlist</span>
               <span className="hero-cta-arrow">
                 <ArrowRight className="h-5 w-5" />
               </span>
@@ -237,7 +231,7 @@ export default function LandingPage() {
             </div>
             <div className="h-px w-full bg-slate-200 font-bold" />
             <div className="text-xl sm:text-2xl text-slate-600">
-              Startups waste time filtering endless resumes.
+              Resumes are the bottleneck in modern hiring.
             </div>
             <div className="h-px w-full bg-slate-200" />
             <div className="text-xl sm:text-2xl text-slate-600">
@@ -346,10 +340,10 @@ export default function LandingPage() {
               The Future of Hiring Starts Here.
             </h3>
             <Link
-              to="/signup"
+              to="/rsvp"
               className="rounded-full bg-white px-6 py-3 text-xs font-semibold text-[#0c0b1f] shadow-lg transition hover:-translate-y-0.5"
             >
-              Experience JOBLESS
+              Join the Waitlist
             </Link>
           </div>
         </div>
