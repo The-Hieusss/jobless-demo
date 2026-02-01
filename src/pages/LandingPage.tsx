@@ -126,9 +126,8 @@ export default function LandingPage() {
             </span>
           </h1>
           <p className="max-w-3xl text-lg text-slate-600">
-            JOBLESS is an AI-powered virtual world where resumes come alive,
-            interviews happen instantly, and talent meets opportunity. It is a
-            hiring playground—serious about matches, joyful about the journey.
+            Jobless is an AI-powered hiring service that simplifies recruitment 
+            and connects businesses with the right talent.
           </p>
           <div className="flex flex-wrap items-center justify-center gap-3">
             <Link
