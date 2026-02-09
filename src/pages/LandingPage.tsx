@@ -341,12 +341,12 @@ export default function LandingPage() {
             <h3 className="text-2xl sm:text-3xl font-semibold">
               The Future of Hiring Starts Here.
             </h3>
-            <Link
-              to="/rsvp"
+            <button          
+                onClick={() => window.location.href = "https://docs.google.com/forms/d/e/1FAIpQLSfmQHj1c-gz0KIBMCszvr8xbqIzQQiShoU8rsrBjxBqilrieA/viewform"}
               className="rounded-full bg-white px-6 py-3 text-xs font-semibold text-[#0c0b1f] shadow-lg transition hover:-translate-y-0.5"
             >
               Join the Waitlist
-            </Link>
+            </button>
           </div>
         </div>
       </section>
