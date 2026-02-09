@@ -87,9 +87,9 @@ export default function LandingPage() {
             ))}
           </div>
           <div className="nav-actions flex items-center gap-6">
-            <Link to="/rsvp" className="nav-cta">
+            <button className="nav-cta" onClick={() => window.location.href = "https://docs.google.com/forms/d/e/1FAIpQLSfmQHj1c-gz0KIBMCszvr8xbqIzQQiShoU8rsrBjxBqilrieA/viewform"}>
               Join Waitlist
-            </Link>
+            </button>
           </div>
         </div>
         {/* Mobile nav dropdown */}
@@ -107,9 +107,12 @@ export default function LandingPage() {
             ))}
           </div>
           <div className="nav-actions flex items-center gap-6">
-            <Link to="/rsvp" className="nav-cta" onClick={() => setNavOpen(false)}>
+            <button className="nav-cta" onClick={() => {
+              setNavOpen(false);
+              window.location.href = "https://docs.google.com/forms/d/e/1FAIpQLSfmQHj1c-gz0KIBMCszvr8xbqIzQQiShoU8rsrBjxBqilrieA/viewform";
+            }}>
               Join Waitlist
-            </Link>
+            </button>
           </div>
         </div>
       </header>
@@ -130,15 +133,15 @@ export default function LandingPage() {
             and connects businesses with the right talent.
           </p>
           <div className="flex flex-wrap items-center justify-center gap-3">
-            <Link
-              to="/rsvp"
+            <button
+                onClick={() => window.location.href = "https://docs.google.com/forms/d/e/1FAIpQLSfmQHj1c-gz0KIBMCszvr8xbqIzQQiShoU8rsrBjxBqilrieA/viewform"}
               className="hero-cta-button"
             >
               <span className="text-lg font-semibold">Join the Waitlist</span>
               <span className="hero-cta-arrow">
                 <ArrowRight className="h-5 w-5" />
               </span>
-            </Link>
+            </button>
           </div>
         </div>
 
